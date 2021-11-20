@@ -11,21 +11,28 @@ pub struct Post {
 
 struct PostDao;
 impl Dao<Post> for PostDao {
-    fn create(dto: Self) -> Box<dyn CreateDaoBuilder<Item = Post>> {
-        unimplemented!();
+    fn create(dto: Post) -> Box<dyn CreateDaoBuilder<Item = Post>> {
+        Box::new(PostCreateDaoBuilder::new(dto))
     }
     fn read() -> Box<dyn ReadDaoBuilder<Item = Post>> {
-        unimplemented!();
+        Box::new(PostReadDaoBuilder {})
     }
-    fn add(dto: Self) -> Box<dyn AddDaoBuilder<Item = Post>> {
-        unimplemented!();
+    fn add(dto: Post) -> Box<dyn AddDaoBuilder<Item = Post>> {
+        Box::new(PostAddDaoBuilder::new(dto))
     }
     fn delete() -> Box<dyn DeleteDaoBuilder> {
-        unimplemented!();
+        Box::new(PostDeleteBuilder::new())
     }
 }
 
-struct PostCreateDaoBuilder {}
+struct PostCreateDaoBuilder {
+    dto: Post,
+}
+impl PostCreateDaoBuilder {
+    fn new(dto: Post) -> Self {
+        PostCreateDaoBuilder { dto: dto }
+    }
+}
 impl CreateDaoBuilder for PostCreateDaoBuilder {
     type Item = Post;
     fn run_query(self) -> Result<Self::Item, DaoError> {
@@ -33,23 +40,34 @@ impl CreateDaoBuilder for PostCreateDaoBuilder {
     }
 }
 struct PostReadDaoBuilder {}
+impl PostReadDaoBuilder {}
 impl ReadDaoBuilder for PostReadDaoBuilder {
     type Item = Post;
     fn run_query(self) -> Result<Self::Item, DaoError> {
         unimplemented!()
     }
 }
-struct PostAddDaoBuilder {}
+struct PostAddDaoBuilder {
+    dto: Post,
+}
+impl PostAddDaoBuilder {
+    fn new(dto: Post) -> Self {
+        PostAddDaoBuilder { dto: dto }
+    }
+}
 impl AddDaoBuilder for PostAddDaoBuilder {
     type Item = Post;
-    fn add(&self, item: Self::Item) -> &Self {
-        self
-    }
-    fn run_query(self) -> Result<Self::Item, DaoError> {
+    fn run_query(self) -> Result<(), DaoError> {
         unimplemented!()
     }
 }
+
 struct PostDeleteBuilder {}
+impl PostDeleteBuilder {
+    fn new() -> Self {
+        PostDeleteBuilder {}
+    }
+}
 impl DeleteDaoBuilder for PostDeleteBuilder {
     fn run_query(self) -> Result<(), DaoError> {
         unimplemented!()

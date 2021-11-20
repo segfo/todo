@@ -17,9 +17,9 @@ impl std::fmt::Display for DaoError {
 }
 
 trait Dao<T> {
-    fn create(dto: Self) -> Box<dyn CreateDaoBuilder<Item = T>>;
+    fn create(dto: T) -> Box<dyn CreateDaoBuilder<Item = T>>;
     fn read() -> Box<dyn ReadDaoBuilder<Item = T>>;
-    fn add(dto: Self) -> Box<dyn AddDaoBuilder>;
+    fn add(dto: T) -> Box<dyn AddDaoBuilder<Item = T>>;
     fn delete() -> Box<dyn DeleteDaoBuilder>;
 }
 trait CreateDaoBuilder {
@@ -32,7 +32,6 @@ trait ReadDaoBuilder {
 }
 trait AddDaoBuilder {
     type Item;
-    fn add(&self, item: Self::Item) -> &Self;
     fn run_query(self) -> Result<(), DaoError>;
 }
 trait DeleteDaoBuilder {
