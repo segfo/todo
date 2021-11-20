@@ -11,13 +11,13 @@ pub struct Post {
 
 struct PostDao;
 impl Dao<Post> for PostDao {
-    fn create(dto: Post) -> Box<dyn CreateDaoBuilder> {
+    fn create(dto: Self) -> Box<dyn CreateDaoBuilder<Item = Post>> {
         unimplemented!();
     }
-    fn read() -> Box<dyn ReadDaoBuilder> {
+    fn read() -> Box<dyn ReadDaoBuilder<Item = Post>> {
         unimplemented!();
     }
-    fn add(dto: Post) -> Box<dyn AddDaoBuilder> {
+    fn add(dto: Self) -> Box<dyn AddDaoBuilder<Item = Post>> {
         unimplemented!();
     }
     fn delete() -> Box<dyn DeleteDaoBuilder> {
@@ -26,19 +26,32 @@ impl Dao<Post> for PostDao {
 }
 
 struct PostCreateDaoBuilder {}
-impl CreateDaoBuilder for PostCreateDaoBuilder {}
-
-// impl Dao<Post> for PostDao {
-//     fn create(dto: Post) -> Result<(), DaoError> {
-//         unimplemented!();
-//     }
-//     fn read() -> Result<Post, DaoError> {
-//         unimplemented!();
-//     }
-//     fn add(dto: Post) -> Result<(), DaoError> {
-//         unimplemented!();
-//     }
-//     fn delete() -> Result<(), DaoError> {
-//         unimplemented!();
-//     }
-// }
+impl CreateDaoBuilder for PostCreateDaoBuilder {
+    type Item = Post;
+    fn run_query(self) -> Result<Self::Item, DaoError> {
+        unimplemented!()
+    }
+}
+struct PostReadDaoBuilder {}
+impl ReadDaoBuilder for PostReadDaoBuilder {
+    type Item = Post;
+    fn run_query(self) -> Result<Self::Item, DaoError> {
+        unimplemented!()
+    }
+}
+struct PostAddDaoBuilder {}
+impl AddDaoBuilder for PostAddDaoBuilder {
+    type Item = Post;
+    fn add(&self, item: Self::Item) -> &Self {
+        self
+    }
+    fn run_query(self) -> Result<Self::Item, DaoError> {
+        unimplemented!()
+    }
+}
+struct PostDeleteBuilder {}
+impl DeleteDaoBuilder for PostDeleteBuilder {
+    fn run_query(self) -> Result<(), DaoError> {
+        unimplemented!()
+    }
+}
