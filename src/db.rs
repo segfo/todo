@@ -1,3 +1,4 @@
+pub mod error;
 pub mod post;
 use crate::sqlite::schema;
 use crate::sqlite::SqliteConnection;
@@ -16,24 +17,26 @@ impl std::fmt::Display for DaoError {
     }
 }
 
-trait Dao<T> {
-    fn create(dto: T) -> Box<dyn CreateDaoBuilder<Item = T>>;
-    fn read() -> Box<dyn ReadDaoBuilder<Item = T>>;
-    fn add(dto: T) -> Box<dyn AddDaoBuilder<Item = T>>;
-    fn delete() -> Box<dyn DeleteDaoBuilder>;
+pub trait QueryResult {
+    fn as_any(&self) -> &dyn std::any::Any;
 }
-trait CreateDaoBuilder {
-    type Item;
-    fn run_query(self) -> Result<Self::Item, DaoError>;
+
+pub trait Dao<T> {
+    fn create(&mut self, dto: T) -> Box<dyn CreateDaoBuilder>;
+    fn read(&mut self) -> Box<dyn ReadDaoBuilder>;
+    fn add(&mut self, dto: T) -> Box<dyn AddDaoBuilder>;
+    fn delete(&mut self) -> Box<dyn DeleteDaoBuilder>;
 }
-trait ReadDaoBuilder {
-    type Item;
-    fn run_query(self) -> Result<Self::Item, DaoError>;
+
+pub trait CreateDaoBuilder {
+    fn run_query(&self) -> Box<dyn QueryResult>;
 }
-trait AddDaoBuilder {
-    type Item;
-    fn run_query(self) -> Result<(), DaoError>;
+pub trait ReadDaoBuilder {
+    fn run_query(self) -> Box<dyn QueryResult>;
 }
-trait DeleteDaoBuilder {
-    fn run_query(self) -> Result<(), DaoError>;
+pub trait AddDaoBuilder {
+    fn run_query(self) -> Box<dyn QueryResult>;
+}
+pub trait DeleteDaoBuilder {
+    fn run_query(self) -> Box<dyn QueryResult>;
 }
