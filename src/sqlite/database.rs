@@ -19,15 +19,14 @@ impl PostDao {
         }
     }
 }
-#[derive(Insertable)]
-#[table_name = "posts"]
-pub struct NewPost<'a> {
-    pub title: &'a str,
-    pub body: &'a str,
-}
 
-struct PostCreateResult {
+pub struct PostCreateResult {
     result: std::result::Result<usize, diesel::result::Error>,
+}
+impl PostCreateResult {
+    pub fn get_result(&self) -> &std::result::Result<usize, diesel::result::Error> {
+        &self.result
+    }
 }
 
 impl QueryResult for PostCreateResult {
