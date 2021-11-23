@@ -18,25 +18,13 @@ impl std::fmt::Display for DaoError {
 }
 
 pub trait QueryResult {
+    // 個別のResultへダウンキャストを行うためのインタフェース
     fn as_any(&self) -> &dyn std::any::Any;
 }
 
 pub trait Dao<T> {
-    fn create(&mut self, dto: T) -> Box<dyn CreateDaoBuilder>;
-    fn read(&mut self) -> Box<dyn ReadDaoBuilder>;
-    fn add(&mut self, dto: T) -> Box<dyn AddDaoBuilder>;
-    fn delete(&mut self) -> Box<dyn DeleteDaoBuilder>;
-}
-
-pub trait CreateDaoBuilder {
-    fn run_query(&self) -> Box<dyn QueryResult>;
-}
-pub trait ReadDaoBuilder {
-    fn run_query(self) -> Box<dyn QueryResult>;
-}
-pub trait AddDaoBuilder {
-    fn run_query(self) -> Box<dyn QueryResult>;
-}
-pub trait DeleteDaoBuilder {
-    fn run_query(self) -> Box<dyn QueryResult>;
+    fn create(&mut self, dto: T) -> Box<dyn QueryResult>;
+    fn read(&mut self) -> Box<dyn QueryResult>;
+    fn add(&mut self, dto: T) -> Box<dyn QueryResult>;
+    fn delete(&mut self) -> Box<dyn QueryResult>;
 }

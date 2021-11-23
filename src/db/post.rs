@@ -19,14 +19,3 @@ impl Post {
         }
     }
 }
-
-pub struct PostDao {
-    connection: DbConnection,
-}
-impl PostDao {
-    fn new(connection: DbConnection) -> Self {
-        PostDao {
-            connection: connection,
-        }
-    }
-}
