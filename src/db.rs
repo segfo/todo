@@ -28,3 +28,8 @@ pub trait Dao<T> {
     fn add(&mut self, dto: T) -> Box<dyn QueryResult>;
     fn delete(&mut self) -> Box<dyn QueryResult>;
 }
+
+pub trait Selectable {
+    type Columns;
+    fn columns() -> Self::Columns;
+}

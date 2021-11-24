@@ -1,7 +1,6 @@
 use super::schema::*;
 use super::*;
-// #[derive(Queryable)]
-#[derive(Queryable, Insertable)]
+#[derive(Queryable, Insertable, Identifiable)]
 #[table_name = "posts"]
 pub struct Post {
     id: i32,
