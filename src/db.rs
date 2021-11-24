@@ -23,10 +23,10 @@ pub trait QueryResult {
 }
 
 pub trait Dao<T> {
-    fn create(&mut self, dto: T) -> Box<dyn QueryResult>;
+    fn create(&mut self) -> Box<dyn QueryResult>;
     fn read(&mut self) -> Box<dyn QueryResult>;
-    fn add(&mut self, dto: T) -> Box<dyn QueryResult>;
-    fn delete(&mut self) -> Box<dyn QueryResult>;
+    fn update(&mut self, dto: T) -> Box<dyn QueryResult>;
+    fn delete(&mut self, dto: T) -> Box<dyn QueryResult>;
 }
 
 pub trait Selectable {

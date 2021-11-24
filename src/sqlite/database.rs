@@ -49,6 +49,21 @@ impl QueryResult for PostReadResult {
     }
 }
 
+pub struct PostAddResult {
+    result: std::result::Result<usize, diesel::result::Error>,
+}
+impl PostAddResult {
+    pub fn get_result(&self) -> &std::result::Result<usize, diesel::result::Error> {
+        &self.result
+    }
+}
+
+impl QueryResult for PostAddResult {
+    fn as_any(&self) -> &dyn std::any::Any {
+        self
+    }
+}
+
 impl Selectable for Post {
     type Columns = (posts::id, posts::title, posts::body, posts::done_flag);
     fn columns() -> Self::Columns {
@@ -57,7 +72,8 @@ impl Selectable for Post {
 }
 use crate::diesel::RunQueryDsl;
 impl Dao<Post> for PostDao {
-    fn create(&mut self, dto: Post) -> Box<dyn QueryResult> {
+    fn create(&mut self) -> Box<dyn QueryResult> {
+        let dto = Post::create_new();
         let res = diesel::insert_into(posts::table)
             .values(&dto)
             .execute(self.get_sqlite_connection().unwrap());
@@ -71,10 +87,18 @@ impl Dao<Post> for PostDao {
             .execute(self.get_sqlite_connection().unwrap());
         Box::new(PostReadResult { result: res })
     }
-    fn add(&mut self, dto: Post) -> Box<dyn QueryResult> {
-        unimplemented!()
+    fn update(&mut self, dto: Post) -> Box<dyn QueryResult> {
+        let res = diesel::update(posts::table)
+            .set(&dto)
+            .execute(self.get_sqlite_connection().unwrap());
+        Box::new(PostAddResult { result: res })
     }
-    fn delete(&mut self) -> Box<dyn QueryResult> {
-        unimplemented!()
+    fn delete(&mut self, dto: Post) -> Box<dyn QueryResult> {
+        use super::schema::posts::dsl::*;
+        use crate::diesel::ExpressionMethods;
+        use crate::diesel::QueryDsl;
+        let res = diesel::delete(posts.filter(id.eq(dto.get_id())))
+            .execute(self.get_sqlite_connection().unwrap());
+        Box::new(PostAddResult { result: res })
     }
 }
